@@ -7,6 +7,24 @@ Write-Host "   Whisper Transcription App" -ForegroundColor Cyan
 Write-Host "============================================" -ForegroundColor Cyan
 Write-Host ""
 
+# Activate the Conda environment first
+$condaEnvName = "whisper"
+Write-Host "🔧 Activating Conda environment '$condaEnvName'..." -ForegroundColor Yellow
+try {
+    $condaExecutable = (Get-Command conda.exe -ErrorAction Stop).Source
+    $condaHook = & $condaExecutable "shell.powershell" "hook" 2>$null
+    Invoke-Expression $condaHook
+    conda activate $condaEnvName | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "Conda activation returned exit code $LASTEXITCODE" }
+    Write-Host "✅ Conda environment '$condaEnvName' activated." -ForegroundColor Green
+}
+catch {
+    Write-Host "❌ Failed to activate Conda environment '$condaEnvName'." -ForegroundColor Red
+    Write-Host "   Ensure Conda is installed and the environment exists." -ForegroundColor Yellow
+    Read-Host "Press Enter to exit"
+    exit 1
+}
+
 # Check if Python is installed
 try {
     $pythonVersion = python --version 2>&1

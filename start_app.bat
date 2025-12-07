@@ -8,6 +8,17 @@ echo   Whisper Transcription App
 echo ============================================
 echo.
 
+REM Activate the Conda environment first
+set "CONDA_ENV=whisper"
+call conda activate %CONDA_ENV% >nul 2>&1
+if errorlevel 1 (
+    echo ❌ Failed to activate Conda environment %CONDA_ENV%.
+    echo    Make sure Conda is installed and the environment exists.
+    pause
+    exit /b 1
+)
+echo ✅ Conda environment %CONDA_ENV% activated.
+
 REM Check if Python is installed
 python --version >nul 2>&1
 if errorlevel 1 (
